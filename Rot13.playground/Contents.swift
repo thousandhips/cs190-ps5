@@ -46,7 +46,7 @@ You are going to implement a Rot13 class that adopts the Crypto protocol. Here i
 
 */
 
-protocol Cerypto {
+protocol Crypto {
     
     // encrypts plain text and returns cipher text
     func encrypt(plainText: String) -> String
