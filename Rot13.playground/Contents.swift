@@ -46,7 +46,7 @@ You are going to implement a Rot13 class that adopts the Crypto protocol. Here i
 
 */
 
-protocol Crypto {
+protocol CryptoSystem {
     
     // encrypts plain text and returns cipher text
     func encrypt(plainText: String) -> String
@@ -66,8 +66,63 @@ For the next problem set, which will be after the break, we are going to impleme
 Uncomment the following two lines to get started:
 */
 
-// class Rot13: Crypto {
-// }
+class Rot13: CryptoSystem {
+
+    //rot13 coded by Sam Allen, all rights reserved by him
+    func rot13(value: String) -> String {
+        // Empty character array.
+        var result = [Character]()
+        // Some ASCII constants.
+        // A = 65
+        // M = 77
+        // Z = 90
+        // a = 97
+        // m = 109
+        // z = 122
+        let upperA = 65
+        let upperM = 77
+        let upperZ = 90
+        let lowerA = 97
+        let lowerM = 109
+        let lowerZ = 122
+        
+        // Loop over utf8 values in string.
+        for u in value.utf8 {
+            
+            let s = Int(u)
+            var resultCharacter = Character(UnicodeScalar(s))
+            if s >= lowerA && s <= lowerZ { // Between a and z.
+                if s >= lowerM {
+                    resultCharacter = Character(UnicodeScalar(s - 13))
+                } else {
+                    resultCharacter = Character(UnicodeScalar(s + 13))
+                }
+            } else if s >= upperA && s <= upperZ { // Between A and Z.
+                if s >= upperM {
+                    resultCharacter = Character(UnicodeScalar(s - 13))
+                } else {
+                    resultCharacter = Character(UnicodeScalar(s + 13))
+                }
+            }
+            // Append to Character array.
+            result.append(resultCharacter)
+            
+        }
+        // Return String.
+        return String(result)
+    }
+   
+    //rot13 a string to encrypt
+    func decrypt(cipherText: String) -> String {
+        return rot13(cipherText)
+    }
+    
+    //rot13 a string to decrypt
+    func encrypt(plainText: String) -> String {
+        return rot13(plainText)
+    }
+    
+}
 
 /*:
 The rest of this file contains the unit tests that run automatically as you edit the code. You shouldn't have to mess with the unit tests unless I made a mistake writing them.
@@ -79,7 +134,7 @@ class Rot13TestSuite: XCTestCase {
     
     // Mary Poppins
     func testRot13EncryptAllCaps() {
-        let crypto = Rot13() as Crypto
+        let crypto = Rot13() as CryptoSystem
         let plainText = "SUPERCALIFRAGILISTICEXPIALIDOCIOUS"
         let cipherText = crypto.encrypt(plainText)
         let expectedCipherText = "FHCREPNYVSENTVYVFGVPRKCVNYVQBPVBHF"
@@ -88,7 +143,7 @@ class Rot13TestSuite: XCTestCase {
 
     // Mary Poppins again
     func testRot13EncryptAllLower() {
-        let crypto = Rot13() as Crypto
+        let crypto = Rot13() as CryptoSystem
         let plainText = "supercalifragilisticexpialidocious"
         let cipherText = crypto.encrypt(plainText)
         let expectedCipherText = "fhcrepnyvsentvyvfgvprkcvnyvqbpvbhf"
@@ -97,7 +152,7 @@ class Rot13TestSuite: XCTestCase {
     
     // Rot13 should have no effect on spaces.
     func testRot13DecryptWithSpaces() {
-        let crypto = Rot13() as Crypto
+        let crypto = Rot13() as CryptoSystem
         let cipherText = "super califragilistic expialidocious"
         let plainText = crypto.decrypt(cipherText)
         let expectedPlainText = "fhcre pnyvsentvyvfgvp rkcvnyvqbpvbhf"
@@ -106,7 +161,7 @@ class Rot13TestSuite: XCTestCase {
     
     // Rot13 should have no effect on Cantonese characters.
     func testRot13DecryptWithCantonese() {
-        let crypto = Rot13() as Crypto
+        let crypto = Rot13() as CryptoSystem
         let cipherText = "香港增補字符集"
         let plainText = crypto.decrypt(cipherText)
         let expectedPlainText = "香港增補字符集"
